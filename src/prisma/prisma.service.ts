@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { PrismaClient } from "@prisma/client";
+import { Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { PrismaClient } from '@prisma/client'
 
 @Injectable()
 export class PrismaService extends PrismaClient {
@@ -9,9 +9,15 @@ export class PrismaService extends PrismaClient {
     super({
       datasources: {
         db: {
-          url: config.get<string>("DATABASE_URL"),
+          url: config.get<string>('DATABASE_URL'),
         },
       },
-    });
+    })
+  }
+  cleanDb() {
+    return this.$transaction([
+      this.bookmark.deleteMany(),
+      this.user.deleteMany(),
+    ])
   }
 }
